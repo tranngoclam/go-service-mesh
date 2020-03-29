@@ -19,6 +19,5 @@ FROM alpine:3.11.3
 ARG BUILD_DIR
 
 COPY --from=build $BUILD_DIR/server ./
-COPY --from=build $BUILD_DIR/haproxy.crt ./
 
 CMD ["./server"]

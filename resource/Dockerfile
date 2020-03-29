@@ -19,7 +19,5 @@ FROM alpine:3.11.3
 ARG BUILD_DIR
 
 COPY --from=build $BUILD_DIR/server ./
-COPY --from=build $BUILD_DIR/server.crt ./
-COPY --from=build $BUILD_DIR/server.key ./
 
 CMD ["./server"]

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package data;
+option go_package = "resourceservice";
 
 message Resource {
     string id = 1;

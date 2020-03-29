@@ -10,19 +10,25 @@ import (
 	"net"
 )
 
-var resources = []res.Resource{
-	{Id: "1", Name: "iPhone XS"},
-	{Id: "2", Name: "Macbook Pro"},
-}
-
 type server struct {
+	resources []*res.Resource
 }
 
-func (*server) GetResource(_ context.Context, req *res.ResourceID) (*res.Resource, error) {
-	resourceID := req.Value
-	for _, resource := range resources {
+func newServer() *server {
+	return &server{
+		resources: []*res.Resource{
+			{Id: "1", Name: "iPhone XS"},
+			{Id: "2", Name: "Macbook Pro"},
+		}}
+}
+
+func (s *server) GetResource(_ context.Context, request *res.ResourceID) (*res.Resource, error) {
+	log.Println(request)
+
+	resourceID := request.GetValue()
+	for _, resource := range s.resources {
 		if resource.Id == resourceID {
-			return &resource, nil
+			return resource, nil
 		}
 	}
 
@@ -38,16 +44,9 @@ func main() {
 	}
 	log.Printf("resource server is listening on %s", address)
 
-	//creds, err := credentials.NewServerTLSFromFile("server.crt", "server.key")
-	//if err != nil {
-	//	log.Fatalf("Failed to load TLS keys")
-	//}
-
-	//s := grpc.NewServer(grpc.Creds(creds))
 	s := grpc.NewServer()
-	//defer s.GracefulStop()
 
-	res.RegisterResourceServiceServer(s, &server{})
+	res.RegisterResourceServiceServer(s, newServer())
 
 	err = s.Serve(listener)
 	if err != nil {
