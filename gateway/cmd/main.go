@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	res "github.com/tranngoclam/go-grpc-haproxy/gateway"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"log"
 	"net/http"
 	"os"
@@ -26,42 +25,46 @@ func resource(w http.ResponseWriter, r *http.Request) {
 	// invoke grpc method
 	response, err := resourceClient.GetResource(context.Background(), request)
 	if err != nil {
-		log.Println(err)
+		log.Printf("get resource failed %+v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	// return response
 	data := map[string]interface{}{"id": response.Id, "name": response.Name}
-	bytes, err := json.Marshal(data)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	bytes, _ := json.Marshal(data)
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(bytes)
 }
 
 func main() {
-	creds, err := credentials.NewClientTLSFromFile("haproxy.crt", "")
-	if err != nil {
-		panic(err)
-	}
+	//creds, err := credentials.NewClientTLSFromFile("haproxy.crt", "")
+	//if err != nil {
+	//	panic(err)
+	//}
 
-	cc, err := grpc.Dial(resourceAddress, grpc.WithTransportCredentials(creds))
+	//cc, err := grpc.Dial(resourceAddress, grpc.WithTransportCredentials(creds))
+	cc, err := grpc.Dial(resourceAddress, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	defer func() {
-		err := cc.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
+	log.Printf("dial %s successfully", resourceAddress)
+	//defer func() {
+	//	err := cc.Close()
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//}()
 
 	resourceClient = res.NewResourceServiceClient(cc)
+
+	//time.Sleep(10 * time.Second)
+	//response, err := resourceClient.GetResource(context.Background(), &res.ResourceID{Value: "1"})
+	//if err != nil {
+	//	panic(err)
+	//}
+	//log.Println(response.Name)
 
 	http.HandleFunc("/", resource)
 

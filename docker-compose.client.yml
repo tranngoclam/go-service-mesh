@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  gateway:
+    container_name: go-grpc-haproxy_gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    environment:
+      - RESOURCE_ADDRESS=haproxy:3001
+#    depends_on:
+#      - resource
+#      - haproxy
