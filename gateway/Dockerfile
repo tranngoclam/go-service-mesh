@@ -1,6 +1,6 @@
 ARG BUILD_DIR=/go/src/github.com/tranngoclam/go-grpc-haproxy/gateway
 
-FROM golang:1.14 AS build
+FROM golang:1.14.1 AS build
 
 ARG BUILD_DIR
 

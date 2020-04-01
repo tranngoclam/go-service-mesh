@@ -5,9 +5,25 @@ gen:
 .PHONY: gen
 
 up:
-	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml up --build
+	@COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml up -d --build
 .PHONY: up
 
 down:
-	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml down -v
+	@COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml down -v
 .PHONY: down
+
+ps:
+	@docker-compose ps
+.PHONY: ps
+
+register:
+	@docker exec service-mesh-consul-client /bin/sh -c "echo '{\"service\": {\"name\": \"gateway\", \"tags\": [\"go\"], \"port\": 3000}}' >> /consul/config/gateway.json"
+.PHONY: register
+
+reload:
+	@docker exec service-mesh-consul-client consul reload
+.PHONY: reload
+
+members:
+	@docker exec service-mesh-consul-server consul members
+.PHONY: members

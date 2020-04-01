@@ -2,19 +2,21 @@ version: '3.7'
 
 services:
   gateway:
-    container_name: go-grpc-haproxy_gateway
+    container_name: service-mesh-gateway
     build:
       context: ./gateway
       dockerfile: Dockerfile
     environment:
       - RESOURCE_ADDRESS=haproxy:443
+    ports:
+      - "3000:3000"
     depends_on:
       - resource
       - haproxy
 
   haproxy:
-    container_name: go-grpc-haproxy_haproxy
     image: haproxy:2.1.3
+    container_name: service-mesh-haproxy
     volumes:
       - "./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
     ports:
@@ -23,7 +25,23 @@ services:
       - resource
 
   resource:
-    container_name: go-grpc-haproxy_resource
+    container_name: service-mesh-resource
     build:
       context: ./resource
       dockerfile: Dockerfile
+
+  consul-client:
+    image: consul:1.7.2
+    container_name: service-mesh-consul-client
+    command: "consul agent -node=consul-client -client=0.0.0.0 -data-dir=/consul/data -retry-join=consul-server"
+    depends_on:
+      - consul-server
+
+  consul-server:
+    image: consul:1.7.2
+    container_name: service-mesh-consul-server
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    command: "consul agent -server -ui -node=consul-server -bootstrap-expect=1 -client=0.0.0.0 -data-dir=/consul/data"
+
