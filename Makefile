@@ -17,13 +17,13 @@ ps:
 .PHONY: ps
 
 register:
-	@docker exec service-mesh-consul-client /bin/sh -c "echo '{\"service\": {\"name\": \"gateway\", \"tags\": [\"go\"], \"port\": 3000}}' >> /consul/config/gateway.json"
+	@docker exec sm-consul-client /bin/sh -c "echo '{\"service\": {\"name\": \"gateway\", \"tags\": [\"go\"], \"port\": 3000}}' >> /consul/config/gateway.json"
 .PHONY: register
 
 reload:
-	@docker exec service-mesh-consul-client consul reload
+	@docker exec sm-consul-client consul reload
 .PHONY: reload
 
 members:
-	@docker exec service-mesh-consul-server consul members
+	@docker exec sm-consul-server consul members
 .PHONY: members
