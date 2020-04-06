@@ -1,0 +1,9 @@
+{
+  "service": {
+    "name": "resource",
+    "tags": [
+      "resource"
+    ],
+    "port": 3002
+  }
+}

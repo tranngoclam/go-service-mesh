@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"github.com/gorilla/mux"
 	res "github.com/tranngoclam/go-grpc-haproxy/gateway"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -14,7 +15,7 @@ import (
 
 var resourceClient res.ResourceServiceClient
 
-func resource(w http.ResponseWriter, r *http.Request) {
+func ResourceHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	request := &res.ResourceID{Value: id}
@@ -33,6 +34,10 @@ func resource(w http.ResponseWriter, r *http.Request) {
 
 	resource := map[string]interface{}{"id": response.Id, "name": response.Name}
 	sendJSON(w, http.StatusOK, resource)
+}
+
+func HealthHandler(w http.ResponseWriter, r *http.Request) {
+	sendJSON(w, http.StatusOK, map[string]interface{}{})
 }
 
 func sendJSON(w http.ResponseWriter, status int, data map[string]interface{}) {
@@ -59,9 +64,11 @@ func main() {
 
 	resourceClient = res.NewResourceServiceClient(cc)
 
-	http.HandleFunc("/", resource)
+	router := mux.NewRouter()
+	router.HandleFunc("/health", HealthHandler)
+	router.HandleFunc("/", ResourceHandler)
 
-	err = http.ListenAndServe(":3000", nil)
+	err = http.ListenAndServe(":3000", router)
 	if err != nil {
 		panic(err)
 	}

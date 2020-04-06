@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  mariadb-master:
+    image: mariadb:10.5.2
+    container_name: sm-db-master
+    environment:
+      - MYSQL_REPLICATION_MODE=master
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=service_mesh
+      - MYSQL_ROOT_PASSWORD=password
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  mariadb-slave:
+    image: mariadb:10.5.2
+    container_name: sm-db-slave
+    depends_on:
+      - mariadb-master
+    environment:
+      - MYSQL_REPLICATION_MODE=slave
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=service_mesh
+      - MYSQL_MASTER_HOST=mariadb-master
+      - MYSQL_MASTER_PORT_NUMBER=3306
+      - MYSQL_MASTER_ROOT_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=password
+      - ALLOW_EMPTY_PASSWORD=yes

@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  consul-server:
+    image: consul:1.7.2
+    container_name: sm-consul-server
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    volumes:
+      - ../consul/server/config/:/consul/config/
+    command: "consul agent -config-dir=/consul/config/"
+
+  consul-client:
+    image: consul:1.7.2
+    container_name: sm-consul-client
+    volumes:
+      - ../consul/client/config/:/consul/config/
+    command: "consul agent -config-dir=/consul/config/ -join=consul-server"
+    depends_on:
+      - consul-server

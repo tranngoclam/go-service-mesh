@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  gateway:
+    container_name: sm-be-gateway
+    build:
+      context: gateway
+      dockerfile: Dockerfile
+    environment:
+      - RESOURCE_ADDRESS=haproxy:443
+    depends_on:
+      - resource
+      - haproxy
+
+  resource:
+    container_name: sm-be-resource
+    build:
+      context: resource
+      dockerfile: Dockerfile

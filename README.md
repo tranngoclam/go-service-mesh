@@ -1,6 +1,6 @@
-# go-grpc-haproxy
+# go-service-mesh
 
-> Samples HAProxy configurations for Backend using gRPC & Go without SSL.
+> Service Mesh Experiment
 
 ## Structure
 

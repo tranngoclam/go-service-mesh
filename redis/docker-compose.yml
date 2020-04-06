@@ -1,0 +1,6 @@
+version: '3.7'
+
+services:
+  redis:
+    image: redis:5.0.8-alpine
+    container_name: sm-redis
