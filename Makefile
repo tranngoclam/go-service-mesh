@@ -1,4 +1,4 @@
-COMPOSE_FILE := backend/docker-compose.yml:haproxy/docker-compose.yml:mariadb/docker-compose.yml:redis/docker-compose.yml:consul/docker-compose.yml
+COMPOSE_FILE := backend/docker-compose.yml:haproxy/docker-compose.yml:mariadb/docker-compose.yml:redis/docker-compose.yml:consul/docker-compose.yml:elk/docker-compose.yml
 
 gen:
 	protoc --go_out=plugins=grpc:. ./proto/*.proto

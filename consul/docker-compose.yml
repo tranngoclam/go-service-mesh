@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   consul-server:
-    image: consul:1.7.2
+    image: consul:${CONSUL_VERSION}
     container_name: sm-consul-server
     ports:
       - "8500:8500"
@@ -12,7 +12,7 @@ services:
     command: "consul agent -config-dir=/consul/config/"
 
   consul-client:
-    image: consul:1.7.2
+    image: consul:${CONSUL_VERSION}
     container_name: sm-consul-client
     volumes:
       - ../consul/client/config/:/consul/config/
