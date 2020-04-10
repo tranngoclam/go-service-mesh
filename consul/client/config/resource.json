@@ -8,7 +8,7 @@
     "check": {
       "id": "resource_check",
       "name": "Check resource health",
-      "tcp": "localhost:3002",
+      "tcp": "resource:3002",
       "interval": "5s",
       "timeout": "1s"
     }

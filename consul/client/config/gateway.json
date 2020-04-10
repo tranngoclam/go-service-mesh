@@ -8,7 +8,8 @@
     "check": {
       "id": "gateway_check",
       "name": "Check gateway health",
-      "http": "http://localhost/gateway/health",
+      "http": "http://gateway:3000/health",
+      "method": "GET",
       "interval": "5s",
       "timeout": "1s"
     }

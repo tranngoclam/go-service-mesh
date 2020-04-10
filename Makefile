@@ -1,4 +1,4 @@
-COMPOSE_FILE := backend/docker-compose.yml:haproxy/docker-compose.yml:mariadb/docker-compose.yml:redis/docker-compose.yml:consul/docker-compose.yml
+COMPOSE_FILE := docker-compose.yml
 COMPOSE_PROJECT_NAME := sm
 
 gen:
@@ -16,6 +16,9 @@ down:
 
 ps:
 	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_PROJECT_NAME=$(COMPOSE_PROJECT_NAME) docker-compose ps
+
+ips:
+	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_PROJECT_NAME=$(COMPOSE_PROJECT_NAME) docker-compose ps -q | xargs -n 1 docker inspect --format '{{ .Name }} {{range .NetworkSettings.Networks}} {{.IPAddress}}{{end}}' | sed "s#^/##";
 
 register:
 	@docker exec sm-consul-client /bin/sh -c "echo '{\"service\": {\"name\": \"gateway\", \"tags\": [\"go\"], \"port\": 3000}}' >> /consul/config/gateway.json"
