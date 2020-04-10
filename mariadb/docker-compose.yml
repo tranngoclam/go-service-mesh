@@ -3,7 +3,7 @@ version: '3.7'
 services:
   mariadb-master:
     image: mariadb:${MARIADB_VERSION}
-    container_name: sm-db-master
+    container_name: sm_db_master
     environment:
       - MYSQL_REPLICATION_MODE=master
       - MYSQL_REPLICATION_USER=repl_user
@@ -14,7 +14,7 @@ services:
 
   mariadb-slave:
     image: mariadb:${MARIADB_VERSION}
-    container_name: sm-db-slave
+    container_name: sm_db_slave
     depends_on:
       - mariadb-master
     environment:

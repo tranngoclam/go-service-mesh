@@ -1,4 +1,5 @@
-COMPOSE_FILE := backend/docker-compose.yml:haproxy/docker-compose.yml:mariadb/docker-compose.yml:redis/docker-compose.yml:consul/docker-compose.yml:elk/docker-compose.yml
+COMPOSE_FILE := backend/docker-compose.yml:haproxy/docker-compose.yml:mariadb/docker-compose.yml:redis/docker-compose.yml:consul/docker-compose.yml
+COMPOSE_PROJECT_NAME := sm
 
 gen:
 	protoc --go_out=plugins=grpc:. ./proto/*.proto
@@ -6,22 +7,26 @@ gen:
 	cp ./proto/*.go ./resource/
 
 up:
-	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose up -d --build
+	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_PROJECT_NAME=$(COMPOSE_PROJECT_NAME) \
+		COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose up -d --build
 
 down:
-	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose down -v
+	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_PROJECT_NAME=$(COMPOSE_PROJECT_NAME) \
+		COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose down -v
 
 ps:
-	@COMPOSE_FILE=$(COMPOSE_FILE) docker-compose ps
+	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_PROJECT_NAME=$(COMPOSE_PROJECT_NAME) docker-compose ps
 
 register:
 	@docker exec sm-consul-client /bin/sh -c "echo '{\"service\": {\"name\": \"gateway\", \"tags\": [\"go\"], \"port\": 3000}}' >> /consul/config/gateway.json"
 
 reload:
-	@COMPOSE_FILE=$(COMPOSE_FILE) docker-compose exec consul-client consul reload
+	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_PROJECT_NAME=$(COMPOSE_PROJECT_NAME) \
+		docker-compose exec consul-client consul reload
 
 members:
-	@COMPOSE_FILE=$(COMPOSE_FILE) docker-compose exec consul-client consul members
+	@COMPOSE_FILE=$(COMPOSE_FILE) COMPOSE_PROJECT_NAME=$(COMPOSE_PROJECT_NAME) \
+		docker-compose exec consul-client consul members
 
 consul-up:
 	@docker-compose -f consul/docker-compose.yml up

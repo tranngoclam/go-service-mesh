@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	res "github.com/tranngoclam/go-grpc-haproxy/resource"
+	res "github.com/tranngoclam/go-service-mesh/resource"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

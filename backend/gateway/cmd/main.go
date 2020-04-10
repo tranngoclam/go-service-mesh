@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	res "github.com/tranngoclam/go-grpc-haproxy/gateway"
+	res "github.com/tranngoclam/go-service-mesh/gateway"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -36,7 +36,7 @@ func ResourceHandler(w http.ResponseWriter, r *http.Request) {
 	sendJSON(w, http.StatusOK, resource)
 }
 
-func HealthHandler(w http.ResponseWriter, r *http.Request) {
+func HealthHandler(w http.ResponseWriter, _ *http.Request) {
 	sendJSON(w, http.StatusOK, map[string]interface{}{})
 }
 

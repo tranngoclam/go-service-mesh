@@ -1,4 +1,4 @@
-module github.com/tranngoclam/go-grpc-haproxy/resource
+module github.com/tranngoclam/go-service-mesh/resource
 
 go 1.14
 

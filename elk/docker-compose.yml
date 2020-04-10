@@ -3,7 +3,7 @@ version: '3.7'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
-    container_name: sm-mon-es
+    container_name: sm_mon_es
     volumes:
       - type: bind
         source: ../elk/elasticsearch/config/elasticsearch.yml
@@ -24,7 +24,7 @@ services:
 
   logstash:
     image: docker.elastic.co/logstash/logstash:${ELK_VERSION}
-    container_name: sm-mon-logstash
+    container_name: sm_mon_logstash
     volumes:
       - type: bind
         source: ../elk/logstash/config/logstash.yml
@@ -45,7 +45,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:${ELK_VERSION}
-    container_name: sm-mon-kibana
+    container_name: sm_mon_kibana
     volumes:
       - type: bind
         source: ../elk/kibana/config/kibana.yml

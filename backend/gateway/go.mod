@@ -1,4 +1,4 @@
-module github.com/tranngoclam/go-grpc-haproxy/gateway
+module github.com/tranngoclam/go-service-mesh/gateway
 
 go 1.14
 

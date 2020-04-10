@@ -1,4 +1,4 @@
-ARG BUILD_DIR=/go/src/github.com/tranngoclam/go-grpc-haproxy/resource
+ARG BUILD_DIR=/build
 
 FROM golang:1.14.1 AS build
 
