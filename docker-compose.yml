@@ -4,11 +4,12 @@ services:
   gateway:
     container_name: sm_be_gateway
     build:
-      context: gateway
+      context: ./gateway
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 3001:3001
     environment:
+      - SERVER_PORT=3001
       - RESOURCE_ADDRESS=haproxy:443
     depends_on:
       - resource
@@ -17,18 +18,18 @@ services:
   resource:
     container_name: sm_be_resource
     build:
-      context: resource
+      context: ./resource
       dockerfile: Dockerfile
-    ports:
-      - 3002:3002
+    environment:
+      - SERVER_PORT=3002
 
   haproxy:
-    image: haproxy:2.1.3-alpine
+    image: haproxy:$HAPROXY_VERSION
     container_name: sm_lb_haproxy
     volumes:
-      - ./haproxy/config/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      - "./haproxy/config/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
     ports:
-      - 80:80
+      - "80:80"
     depends_on:
       - resource
 

@@ -51,6 +51,9 @@ func sendJSON(w http.ResponseWriter, status int, data map[string]interface{}) {
 }
 
 func main() {
+	port := os.Getenv("SERVER_PORT")
+	address := ":" + port
+
 	cc, err := grpc.Dial(os.Getenv("RESOURCE_ADDRESS"), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
@@ -65,10 +68,12 @@ func main() {
 	resourceClient = res.NewResourceServiceClient(cc)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/health", HealthHandler)
-	router.HandleFunc("/", ResourceHandler)
+	router.HandleFunc("/health", HealthHandler).Methods(http.MethodGet)
+	router.HandleFunc("/resource", ResourceHandler).Methods(http.MethodGet)
 
-	err = http.ListenAndServe(":3000", router)
+	log.Printf("[info] server is listening on %s", address)
+
+	err = http.ListenAndServe(address, router)
 	if err != nil {
 		panic(err)
 	}
