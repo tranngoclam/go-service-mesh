@@ -35,6 +35,12 @@ services:
   mariadb-master:
     image: mariadb:${MARIADB_VERSION}
     container_name: sm_db_master
+    healthcheck:
+      test: ["CMD", "sh", "-c", "mysqladmin ping -hlocalhost -p$MYSQL_ROOT_PASSWORD"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: "--character-set-server=utf8mb4"
     environment:
       - MYSQL_REPLICATION_MODE=master
       - MYSQL_REPLICATION_USER=repl_user
@@ -46,6 +52,12 @@ services:
   mariadb-slave:
     image: mariadb:${MARIADB_VERSION}
     container_name: sm_db_slave
+    healthcheck:
+      test: ["CMD", "sh", "-c", "mysqladmin ping -hlocalhost -p$MYSQL_ROOT_PASSWORD"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: "--character-set-server=utf8mb4"
     depends_on:
       - mariadb-master
     environment:
@@ -62,6 +74,11 @@ services:
   redis:
     image: redis:5.0.8-alpine
     container_name: sm_cache_redis
+    healthcheck:
+      test: ["CMD", "sh", "-c", "redis-cli ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   consul-server:
     image: consul:${CONSUL_VERSION}
