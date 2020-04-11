@@ -1,0 +1,9 @@
+{
+  "server": false,
+  "node_name": "consul-client",
+  "datacenter": "local",
+  "data_dir": "/consul/data",
+  "log_level": "DEBUG",
+  "enable_local_script_checks": true,
+  "enable_script_checks": true
+}

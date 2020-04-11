@@ -1,6 +1,6 @@
-ARG BUILD_DIR=/go/src/github.com/tranngoclam/go-grpc-haproxy/gateway
+ARG BUILD_DIR=/build
 
-FROM golang:1.14 AS build
+FROM golang:1.14.2 AS build
 
 ARG BUILD_DIR
 
@@ -14,7 +14,7 @@ COPY . $BUILD_DIR/
 
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./server cmd/main.go
 
-FROM alpine:3.11.3
+FROM alpine:3.11.5
 
 ARG BUILD_DIR
 

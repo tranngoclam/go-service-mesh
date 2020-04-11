@@ -1,0 +1,16 @@
+{
+  "service": {
+    "name": "redis",
+    "tags": [
+      "redis"
+    ],
+    "port": 6379,
+    "check": {
+      "id": "redis_check",
+      "name": "Check redis health",
+      "tcp": "redis:6379",
+      "interval": "5s",
+      "timeout": "1s"
+    }
+  }
+}

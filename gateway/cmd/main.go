@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
-	res "github.com/tranngoclam/go-grpc-haproxy/gateway"
+	"github.com/gorilla/mux"
+	res "github.com/tranngoclam/go-service-mesh/gateway"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -14,7 +15,7 @@ import (
 
 var resourceClient res.ResourceServiceClient
 
-func resource(w http.ResponseWriter, r *http.Request) {
+func ResourceHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	request := &res.ResourceID{Value: id}
@@ -35,6 +36,10 @@ func resource(w http.ResponseWriter, r *http.Request) {
 	sendJSON(w, http.StatusOK, resource)
 }
 
+func HealthHandler(w http.ResponseWriter, _ *http.Request) {
+	sendJSON(w, http.StatusOK, map[string]interface{}{})
+}
+
 func sendJSON(w http.ResponseWriter, status int, data map[string]interface{}) {
 	body := map[string]interface{}{
 		"message": http.StatusText(status),
@@ -46,6 +51,9 @@ func sendJSON(w http.ResponseWriter, status int, data map[string]interface{}) {
 }
 
 func main() {
+	port := os.Getenv("SERVER_PORT")
+	address := ":" + port
+
 	cc, err := grpc.Dial(os.Getenv("RESOURCE_ADDRESS"), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
@@ -59,9 +67,13 @@ func main() {
 
 	resourceClient = res.NewResourceServiceClient(cc)
 
-	http.HandleFunc("/", resource)
+	router := mux.NewRouter()
+	router.HandleFunc("/health", HealthHandler).Methods(http.MethodGet)
+	router.HandleFunc("/resource", ResourceHandler).Methods(http.MethodGet)
 
-	err = http.ListenAndServe(":3000", nil)
+	log.Printf("[info] server is listening on %s", address)
+
+	err = http.ListenAndServe(address, router)
 	if err != nil {
 		panic(err)
 	}

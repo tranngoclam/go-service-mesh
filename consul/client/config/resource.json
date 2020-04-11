@@ -1,0 +1,16 @@
+{
+  "service": {
+    "name": "resource",
+    "tags": [
+      "resource"
+    ],
+    "port": 3002,
+    "check": {
+      "id": "resource_check",
+      "name": "Check resource health",
+      "tcp": "resource:3002",
+      "interval": "5s",
+      "timeout": "1s"
+    }
+  }
+}

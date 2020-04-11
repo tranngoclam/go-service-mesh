@@ -1,0 +1,17 @@
+{
+  "service": {
+    "name": "gateway",
+    "tags": [
+      "gateway"
+    ],
+    "port": 3001,
+    "check": {
+      "id": "gateway_check",
+      "name": "Check gateway health",
+      "http": "http://gateway:3001/health",
+      "method": "GET",
+      "interval": "5s",
+      "timeout": "1s"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "server": true,
+  "node_name": "consul-server",
+  "datacenter": "local",
+  "data_dir": "/consul/data",
+  "client_addr": "0.0.0.0",
+  "bootstrap_expect": 1,
+  "ui": true,
+  "log_level": "DEBUG"
+}

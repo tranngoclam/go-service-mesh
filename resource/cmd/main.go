@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	res "github.com/tranngoclam/go-grpc-haproxy/resource"
+	res "github.com/tranngoclam/go-service-mesh/resource"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"log"
 	"net"
+	"os"
 )
 
 type server struct {
@@ -36,13 +37,14 @@ func (s *server) GetResource(_ context.Context, request *res.ResourceID) (*res.R
 }
 
 func main() {
-	address := ":3002"
+	port := os.Getenv("SERVER_PORT")
+	address := ":" + port
 
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		panic(err)
 	}
-	log.Printf("resource server is listening on %s", address)
+	log.Printf("[info] server is listening on %s", address)
 
 	s := grpc.NewServer()
 
